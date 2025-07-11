@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS et consol web</title>
-<script src="script.js"></script>
+    <title>Exercice années</title>
+    <script src="Script.js"></script>
+</head>
 
 <body>
 
