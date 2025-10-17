@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Taquin jQuery - La Plateforme_</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    
+    #board {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 2px;
+      background: #333;
+      border: 2px solid #333;
+    }
+    .case {
+      width: 100%;
+      height: 100%;
+      background-image: url("https://i.ibb.co/WvkLVQpN/logo.png");
+      background-size: 300px 300px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      
+    }
+    
+    .empty {
+      background: #fff;
+      cursor: default;
+    }
+    #message {
+      font-size: 20px;
+      font-weight: bold;
+      color: green;
+      margin-top: 15px;
+    }
+    #restart {
+      color: blue;
+      font-size: 20px;
+      font-weight: bold;
+      font-size: 20px;
+      
+      
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>Jeu du Taquin - La Plateforme_</h1>
+  <div id="board"></div>
+  <div id="message"></div>
+  <button id="restart">Recommencer</button>
+  
+  <script>
+    let $board = $("#board");
+    let $message = $("#message");
+    let $restart = $("#restart");
+    let cases = [];
+    let emptyIndex = 8;
+    let gameActive = true;
+    
+    function init() {
+      cases = [];
+      $board.empty();
+      $message.text("");
+      $restart.hide();
+      gameActive = true;
+      emptyIndex = 8;
+      
+      for (let i = 0; i < 9; i++) {
+        let $case = $("<div></div>");
+        if (i < 9 -1) {
+          $case.addClass("case");
+          let x = (i % 3) * -100; // position horizontale
+          let y = Math.floor(i / 3) * -100; // position verticale
+          $case.css("background-position", x + "px " + y + "px");
+          $case.attr("data-index", i);
+          $case.on("click", function() { movecase(i); });
+        } else {
+          $case.addClass("empty");
+        }
+        $board.append($case);
+        cases.push($case);
+      }
+      
+      shuffleBoard();
+    }
+    
+    function shuffleBoard() {
+      let moves = [1, -1, 3, -3];
+      for (let i = 0; i < 100; i++) {
+        let possible = [];
+        $.each(moves, function(_, move) {
+          let newIndex = emptyIndex + move;
+          if (isValidMove(emptyIndex, newIndex)) {
+            possible.push(newIndex);
+          }
+        });
+        if (possible.length > 0) {
+          let choice = possible[Math.floor(Math.random() * possible.length)];
+          swapcases(emptyIndex, choice);
+          emptyIndex = choice;
+        }
+      }
+    }
+    
+    function isValidMove(empty, target) {
+      if (target < 0 || target > 8) return false;
+      // explicitement limite les mouvements entre les bords gauche et droit
+      if (empty % 3 === 0 && target === empty - 1) return false;
+      if (empty % 3 === 2 && target === empty + 1) return false;
+      return true;
+    }
+    
+    function movecase(i) {
+      if (!gameActive) return;
+      if (isValidMove(emptyIndex, i)) {
+        swapcases(emptyIndex, i);
+        emptyIndex = i;
+        checkWin();
+      }
+    }
+    
+    function swapcases(i, j) {
+      let $ci = cases[i];
+      let $cj = cases[j];
+      
+      // Échange des classes
+      let tempClass = $ci.attr("class");
+      $ci.attr("class", $cj.attr("class"));
+      $cj.attr("class", tempClass);
+      
+      // Échange des positions de fond et des index
+      let tempPos = $ci.css("background-position");
+      let tempIdx = $ci.attr("data-index");
+      
+      $ci.css("background-position", $cj.css("background-position"));
+      $ci.attr("data-index", $cj.attr("data-index"));
+      
+      $cj.css("background-position", tempPos);
+      $cj.attr("data-index", tempIdx);
+    }
+    
+    function checkWin() {
+      for (let i = 0; i < 8; i++) {
+        if (cases[i].attr("data-index") != i) {
+          return;
+        }
+      }
+      $message.text(" Vous avez gagné !");
+      gameActive = false;
+      $restart.show();
+    }
+    
+    $restart.on("click", init);
+    
+    $(document).ready(init);
+  </script>
+</body>
+</html>
+

@@ -6,6 +6,7 @@ window.addEventListener("scroll", function () {
     target.style.backgroundColor = "red";
     target.style.display = "block";
   } else {
-    target.style.backgroundColor = "white";
+    target.style.backgroundColor = "transparent";
   }
 });
+  

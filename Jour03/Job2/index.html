@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jour03 (job2)</title>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+      }
+      #container-img {
+        width: 100px;
+        display: flex;
+        margin: 1em;
+      }
+#container-img img{
+  cursor: grab;
+  border: 2px solid black;
+
+}
+.gagne{
+color: green;
+}
+.perdu{
+  color: red;
+}
+    </style>
+  </head>
+
+  <body>
+    <div id="container-img">
+      <img src="arc1.png" alt="arc1" data-order="1" />1
+
+      <img src="arc2.png" alt="arc2" data-order="2" />2
+
+      <img src="arc3.png" alt="arc3" data-order="3" />3
+
+      <img src="arc4.png" alt="arc4" data-order="4" />4
+
+      <img src="arc5.png" alt="arc5" data-order="5" />5
+
+      <img src="arc6.png" alt="arc6" data-order="6" />6
+    </div>
+    <button id="melanger">mélanger</button>
+    <button id="verifier">vérifier</button>
+    <div id="message"></div>
+    <!-- CDN import JQuery librairy-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+<script src="script.js"></script>
+<script>
+   $(document).ready(function(){
+      $("#container-img").sortable({
+        update: function(event, ui){
+          $("#container-img").each(function(index){
+            $(this).attr("data-order", index + 1);
+
+          });
+        }
+      });
+
+      function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
+      function melangerImages() {
+        let images = $("#container-img img").toArray();
+        let melange = shuffle(images)
+        $("#container-img").empty();
+        melange.forEach(img => $("#container-img").append(img));
+        // message win/loose
+        $("#message").text("").removeClass("gagne perdu"); 
+      }
+      function verifierOrdre(){
+          let images = $("#container-img img").toArray();
+          let gagne = true;
+          let resultatVerifier = ["arc1","arc2","arc3","arc4","arc5","arc6"];
+          for (let i = 0; i < images.length; i++) {
+          if ($(images[i]).attr("alt") !== resultatVerifier[i]){
+            
+            gagne = false;
+          break;
+          }
+        }
+        if (gagne){
+          $("#message").text("vous avez gagné !").removeClass("perdu").addClass("gagne");
+
+        } else {
+        $("#message").text("vous avez perdu !").removeClass("gagne").addClass("perdu");
+        }
+      }
+
+  $("#melanger").click(melangerImages);
+      $("#verifier").click(verifierOrdre);
+      melangerImages();
+    });
+
+  
+</script>
+</body>
+</html>

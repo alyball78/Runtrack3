@@ -8,12 +8,10 @@
     <title>faire défiler un document</title>
 </head>
 
-<body class="colorRed">
-<div id="colorRed">
+<body id="colorRed">
 
 
-</div>    
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
