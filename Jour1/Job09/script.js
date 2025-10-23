@@ -15,4 +15,4 @@ function tri(numbers, order) {
     );
   }
 }
-tri(numbers, "order");
+tri(numbers, "asc");

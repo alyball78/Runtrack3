@@ -3,6 +3,6 @@ function isbissextile(date) {
     return true;
   } else {
     return false;
-  }
+$  }
 }
 console.log(isbissextile(2024));
